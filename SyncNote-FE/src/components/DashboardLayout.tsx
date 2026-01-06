@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useSyncStore } from '../stores/syncStore';
-import { LogOut, Menu, Plus, RefreshCw } from 'lucide-react';
+import { LogOut, Menu, RefreshCw } from 'lucide-react';
 import { CategoryList } from './CategoryList';
 
 export const DashboardLayout = () => {

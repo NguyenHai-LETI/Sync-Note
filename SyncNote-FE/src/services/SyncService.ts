@@ -1,6 +1,6 @@
 import { db } from '../db/db';
 import client from '../api/client';
-import type { Category, Note, NoteItem } from '../types';
+
 
 const LAST_SYNC_KEY = 'last_synced_at';
 

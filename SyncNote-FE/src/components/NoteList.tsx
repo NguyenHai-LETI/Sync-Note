@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../db/db';
-import { Plus, FileText, Trash2 } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 export const NoteList = () => {

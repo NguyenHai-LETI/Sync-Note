@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
 import { v4 as uuidv4 } from 'uuid';
-import { Trash2, Plus, GripVertical, CheckSquare, Square } from 'lucide-react';
+import { Trash2, Plus, CheckSquare, Square } from 'lucide-react';
 
 export const NoteDetail = () => {
     const { noteId } = useParams();
@@ -57,12 +57,7 @@ export const NoteDetail = () => {
         await db.items.update(itemId, { is_deleted: true, is_dirty: true, updated_at: new Date().toISOString() });
     };
 
-    const deleteNote = async () => {
-        if (window.confirm('Delete this note?')) {
-            if (noteId) await db.notes.update(noteId, { is_deleted: true, is_dirty: true, updated_at: new Date().toISOString() });
-            // Navigate back?
-        }
-    };
+
 
     if (!note) return <div>Loading...</div>;
 
