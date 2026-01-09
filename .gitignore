@@ -1,2 +1,10 @@
 venv/
-.idea
+.idea/
+.env
+staticfiles/
+__pycache__/
+*.pyc
+db.sqlite3
+.DS_Store
+dist/
+node_modules/

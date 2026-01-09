@@ -1,20 +1,16 @@
-# Build stage
-FROM node:18-alpine as build
+# Build Stage
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+# Build the app
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# We don't need a runtime here if we are just using the artifacts
+# But to make this container useful in compose as a "builder" that populates a volume:
+CMD ["sh", "-c", "cp -r dist/* /frontend_build/"]
