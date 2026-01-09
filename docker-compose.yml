@@ -4,14 +4,13 @@ services:
   db:
     image: postgres:15
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
+    # environment: (Đã dùng env_file nên bỏ qua phần này cho gọn)
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  web:
+  backend:
     build: .
     restart: unless-stopped
     env_file:
@@ -20,16 +19,15 @@ services:
       - db
     volumes:
       - django_static:/app/static
-      # - .:/app # Comment out for production/deployment to use the COPY in Dockerfile
     ports:
-      - "8000:8000" # Optional: Expose for debug, or remove if only accessed via Nginx
+      - "8000:8000"
 
   frontend-builder:
     build: ./SyncNote-FE
     volumes:
       - frontend_build:/frontend_build
-    # This command copies the build artifacts to the shared volume
-    command: sh -c "npm run build && cp -r dist/* /frontend_build/"
+    # Lệnh build React và copy ra volume chung
+    command: sh -c "npm install && npm run build && cp -r dist/* /frontend_build/"
 
   nginx:
     image: nginx:alpine
@@ -41,7 +39,7 @@ services:
       - frontend_build:/usr/share/nginx/html
       - django_static:/app/static
     depends_on:
-      - web
+      - backend
       - frontend-builder
 
 volumes:
