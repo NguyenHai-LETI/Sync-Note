@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import client from '../api/client';
 
 export const RegisterPage = () => {
     const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ export const RegisterPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/auth/register', { email, password });
+            const response = await client.post('auth/register', { email, password });
             // Response wrapped by renderer: { success: true, data: user, ... }
             if (response.data.success) {
                 navigate('/login');
