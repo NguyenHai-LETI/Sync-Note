@@ -5,9 +5,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
+# build-essential and libpq-dev removed as we use psycopg2-binary and slim image usually has enough for standard wheels
+# If specific compilation is needed later, we can add them back.
+RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

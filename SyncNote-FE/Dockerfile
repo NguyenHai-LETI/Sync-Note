@@ -9,7 +9,7 @@ RUN npm ci
 COPY . .
 
 # Build the app
-RUN npm run build
+RUN npm run build:prod
 
 # We don't need a runtime here if we are just using the artifacts
 # But to make this container useful in compose as a "builder" that populates a volume:
