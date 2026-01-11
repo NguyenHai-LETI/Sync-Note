@@ -5,9 +5,11 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# build-essential and libpq-dev removed as we use psycopg2-binary and slim image usually has enough for standard wheels
-# If specific compilation is needed later, we can add them back.
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Re-add libpq-dev because python-slim might miss libraries needed for psycopg2 or other packages
+# build-essential is good for compiling other potential dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
