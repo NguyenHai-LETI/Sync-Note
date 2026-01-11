@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useSyncStore } from '../stores/syncStore';
-import { LogOut, Menu, RefreshCw } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { CategoryList } from './CategoryList';
 
 export const DashboardLayout = () => {
     const logout = useAuthStore((state) => state.logout);
-    const { sync, isSyncing } = useSyncStore();
+    const { sync } = useSyncStore();
     const navigate = useNavigate();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -15,6 +15,10 @@ export const DashboardLayout = () => {
         logout();
         navigate('/login');
     };
+
+    useEffect(() => {
+        sync();
+    }, []);
 
     return (
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -30,13 +34,6 @@ export const DashboardLayout = () => {
             }}>
                 <div style={{ padding: '1rem', borderBottom: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h3 style={{ margin: 0 }}>SyncNote</h3>
-                    <button onClick={() => sync()} disabled={isSyncing} style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} title="Sync Now">
-                        <RefreshCw size={18} className={isSyncing ? 'spin' : ''} />
-                    </button>
-                    <style>{`
-                        .spin { animation: spin 1s linear infinite; }
-                        @keyframes spin { 100% { transform: rotate(360deg); } }
-                    `}</style>
                 </div>
 
                 <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>

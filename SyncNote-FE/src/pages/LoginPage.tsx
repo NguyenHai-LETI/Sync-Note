@@ -32,21 +32,41 @@ export const LoginPage = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '1rem', border: '1px solid #ccc' }}>
-            <h2>Login</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%' }} />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column' }}>
+            <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '1.75rem' }}>Welcome Back</h2>
+                {error && <div style={{ backgroundColor: '#fef2f2', color: '#ef4444', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
+
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.9rem' }}>Email Address</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e7e5e4', outline: 'none', boxSizing: 'border-box' }}
+                            placeholder="you@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.9rem' }}>Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e7e5e4', outline: 'none', boxSizing: 'border-box' }}
+                            placeholder="••••••••"
+                        />
+                    </div>
+                    <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem', padding: '0.8rem' }}>Login</button>
+                </form>
+
+                <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#78716c' }}>
+                    Don't have an account? <Link to="/register" style={{ color: '#292524', fontWeight: 600 }}>Create account</Link>
                 </div>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: '100%' }} />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <Link to="/register">Register</Link></p>
+            </div>
         </div>
     );
 };

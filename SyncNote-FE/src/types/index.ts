@@ -25,6 +25,7 @@ export interface Note {
     category: string; // ID
     title: string;
     description?: string;
+    order_index: number;
     created_at?: string;
     updated_at?: string;
     is_deleted: boolean;
@@ -44,4 +45,5 @@ export interface NoteItem {
     is_deleted: boolean;
     synced_at?: string;
     is_dirty?: boolean;
+
 }

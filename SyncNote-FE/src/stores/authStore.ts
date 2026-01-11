@@ -4,6 +4,8 @@ import client from '../api/client';
 import type { User } from '../types';
 import { db } from '../db/db';
 
+
+
 interface AuthState {
     user: User | null;
     accessToken: string | null;
@@ -29,6 +31,7 @@ export const useAuthStore = create<AuthState>()(
             },
 
             logout: async () => {
+                localStorage.removeItem('last_synced_at'); // Clear sync timestamp directly
                 set({ user: null, accessToken: null, refreshTokenString: null });
                 try {
                     await db.delete();

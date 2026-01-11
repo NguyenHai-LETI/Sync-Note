@@ -10,7 +10,7 @@ export class SyncNoteDB extends Dexie {
         super('SyncNoteDB');
         this.version(1).stores({
             categories: 'id, order_index, updated_at, is_deleted, is_dirty',
-            notes: 'id, category, updated_at, is_deleted, is_dirty',
+            notes: 'id, category, order_index, updated_at, is_deleted, is_dirty',
             items: 'id, note, order_index, updated_at, is_deleted, is_dirty'
         });
     }

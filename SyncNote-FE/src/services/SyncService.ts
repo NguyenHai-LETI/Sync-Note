@@ -7,6 +7,7 @@ const LAST_SYNC_KEY = 'last_synced_at';
 export const SyncService = {
     getLastSyncedAt: () => localStorage.getItem(LAST_SYNC_KEY),
     setLastSyncedAt: (iso: string) => localStorage.setItem(LAST_SYNC_KEY, iso),
+    clearLastSyncedAt: () => localStorage.removeItem(LAST_SYNC_KEY),
 
     async pullChanges() {
         const lastSynced = this.getLastSyncedAt();

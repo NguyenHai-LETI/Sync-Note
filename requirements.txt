@@ -7,3 +7,4 @@ requests
 drf-spectacular
 gunicorn
 whitenoise
+python-dotenv
