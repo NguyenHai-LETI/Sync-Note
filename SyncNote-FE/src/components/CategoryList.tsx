@@ -77,7 +77,11 @@ const SortableCategory = ({ category, onDelete, onClick }: SortableCategoryProps
     );
 };
 
-export const CategoryList = () => {
+interface CategoryListProps {
+    onSelect?: () => void;
+}
+
+export const CategoryList: React.FC<CategoryListProps> = ({ onSelect }) => {
     const categories = useLiveQuery(() => db.categories.orderBy('order_index').toArray());
     const navigate = useNavigate();
     const [newCatName, setNewCatName] = useState('');
@@ -143,19 +147,24 @@ export const CategoryList = () => {
         }
     };
 
+    const handleCategoryClick = (id: string) => {
+        navigate(`/categories/${id}`);
+        if (onSelect) onSelect();
+    };
+
     const activeCategories = categories?.filter(c => !c.is_deleted) || [];
 
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <span style={{ fontWeight: 'bold', color: '#666' }}>CATEGORIES</span>
-                <button onClick={() => setIsCreating(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}>
+                <span style={{ fontWeight: 'bold', color: '#666', fontSize: '0.8rem', letterSpacing: '0.05em' }}>CATEGORIES</span>
+                <button onClick={() => setIsCreating(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: '4px' }} className="hover-bg">
                     <Plus size={16} />
                 </button>
             </div>
 
             {isCreating && (
-                <form onSubmit={handleCreate} style={{ marginBottom: '1rem', padding: '0 0.5rem' }}>
+                <form onSubmit={handleCreate} style={{ marginBottom: '1rem' }}>
                     <input
                         autoFocus
                         value={newCatName}
@@ -165,7 +174,7 @@ export const CategoryList = () => {
                             width: '100%',
                             padding: '0.6rem',
                             borderRadius: '8px',
-                            border: '1px solid #e7e5e4',
+                            border: '1px solid var(--border-color)',
                             outline: 'none',
                             fontSize: '0.9rem',
                             backgroundColor: '#fff',
@@ -185,20 +194,23 @@ export const CategoryList = () => {
                     items={activeCategories.map(c => c.id)}
                     strategy={verticalListSortingStrategy}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                         {activeCategories.map(cat => (
                             <SortableCategory
                                 key={cat.id}
                                 category={cat}
                                 onDelete={handleDelete}
-                                onClick={() => navigate(`/categories/${cat.id}`)}
+                                onClick={() => handleCategoryClick(cat.id)}
                             />
                         ))}
                     </div>
                 </SortableContext>
             </DndContext>
 
-            <style>{`.hover-bg:hover { background-color: #eee; }`}</style>
+            <style>{`
+                .hover-bg { transition: background 0.2s; border-radius: 6px; }
+                .hover-bg:hover { background-color: var(--hover-bg); }
+            `}</style>
         </div>
     );
 };

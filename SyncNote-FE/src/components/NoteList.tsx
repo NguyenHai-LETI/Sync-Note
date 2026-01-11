@@ -164,13 +164,25 @@ export const NoteList = () => {
     };
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#444' }}>Notes</h2>
+        <div style={{ width: '100%', boxSizing: 'border-box' }}>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1.5rem',
+                flexWrap: 'wrap',
+                gap: '1rem'
+            }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--accent-color)', margin: 0 }}>Notes</h2>
                 <button
                     onClick={() => setIsCreating(true)}
                     className="btn-primary"
-                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.5rem 1rem'
+                    }}
                 >
                     <Plus size={18} /> New Note
                 </button>

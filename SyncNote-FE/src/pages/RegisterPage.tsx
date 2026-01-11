@@ -24,8 +24,8 @@ export const RegisterPage = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column' }}>
-            <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ padding: 'var(--main-padding)', width: '100%', boxSizing: 'border-box' }}>
+            <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '1.75rem' }}>Create Account</h2>
                 {error && <div style={{ backgroundColor: '#fef2f2', color: '#ef4444', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
 
