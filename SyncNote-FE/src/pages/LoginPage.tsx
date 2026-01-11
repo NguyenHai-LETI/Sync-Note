@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import client from '../api/client';
 import { useAuthStore } from '../stores/authStore';
 
 export const LoginPage = () => {
@@ -13,7 +13,7 @@ export const LoginPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/auth/login', { email, password });
+            const response = await client.post('/auth/login', { email, password });
             if (response.data.success !== false) { // Handle standardized response
                 // Response structure from backend walkthrough: { refresh: "...", access: "..." }
                 // But standardized response wraps it in "data".

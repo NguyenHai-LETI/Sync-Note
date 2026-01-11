@@ -1,21 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import axios from 'axios';
+import client from '../api/client';
 import type { User } from '../types';
 import { db } from '../db/db';
-
-interface AuthState {
-    user: User | null;
-    accessToken: string | null;
-    refreshTokenString: string | null;
-    login: (access: string, refresh: string) => void;
-    logout: () => Promise<void>;
-    setAccessToken: (token: string) => void;
-    refreshToken: () => Promise<void>;
-    isAuthenticated: () => boolean;
-}
-
-const BASE_URL = 'http://localhost:8000';
 
 export const useAuthStore = create<AuthState>()(
     persist(
@@ -49,7 +36,7 @@ export const useAuthStore = create<AuthState>()(
                 if (!refresh) throw new Error("No refresh token");
 
                 try {
-                    const response = await axios.post(`${BASE_URL}/auth/refresh`, { refresh });
+                    const response = await client.post('/auth/refresh', { refresh });
                     set({ accessToken: response.data.access });
                 } catch (error) {
                     get().logout();
