@@ -10,7 +10,7 @@ export const SyncService = {
 
     async pullChanges() {
         const lastSynced = this.getLastSyncedAt();
-        const url = lastSynced ? `/sync?updated_after=${lastSynced}` : '/sync';
+        const url = lastSynced ? `sync?updated_after=${lastSynced}` : 'sync';
 
         try {
             const response = await client.get(url);
@@ -76,7 +76,7 @@ export const SyncService = {
         for (const cat of dirtyCats) {
             try {
                 if (cat.is_deleted) {
-                    await client.delete(`/categories/${cat.id}`);
+                    await client.delete(`categories/${cat.id}`);
                     await db.categories.delete(cat.id); // Hard delete after sync
                 } else {
                     // Check if exists on server? Or just PUT?
@@ -88,9 +88,9 @@ export const SyncService = {
 
                     // Strategy: If it has synced_at, it was on server -> PUT. If not -> POST.
                     if (cat.synced_at) {
-                        await client.put(`/categories/${cat.id}`, cat);
+                        await client.put(`categories/${cat.id}`, cat);
                     } else {
-                        await client.post(`/categories`, cat);
+                        await client.post(`categories`, cat);
                     }
                     await db.categories.update(cat.id, { is_dirty: false, synced_at: new Date().toISOString() });
                 }
@@ -104,13 +104,13 @@ export const SyncService = {
         for (const note of dirtyNotes) {
             try {
                 if (note.is_deleted) {
-                    await client.delete(`/notes/${note.id}`);
+                    await client.delete(`notes/${note.id}`);
                     await db.notes.delete(note.id);
                 } else {
                     if (note.synced_at) {
-                        await client.put(`/notes/${note.id}`, note);
+                        await client.put(`notes/${note.id}`, note);
                     } else {
-                        await client.post(`/categories/${note.category}/notes`, note);
+                        await client.post(`categories/${note.category}/notes`, note);
                     }
                     await db.notes.update(note.id, { is_dirty: false, synced_at: new Date().toISOString() });
                 }
@@ -124,14 +124,14 @@ export const SyncService = {
         for (const item of dirtyItems) {
             try {
                 if (item.is_deleted) {
-                    await client.delete(`/items/${item.id}`);
+                    await client.delete(`items/${item.id}`);
                     await db.items.delete(item.id);
                 } else {
                     if (item.synced_at) {
                         // Use PATCH for convenience as existing item
-                        await client.put(`/items/${item.id}`, item);
+                        await client.put(`items/${item.id}`, item);
                     } else {
-                        await client.post(`/notes/${item.note}/items`, item);
+                        await client.post(`notes/${item.note}/items`, item);
                     }
                     await db.items.update(item.id, { is_dirty: false, synced_at: new Date().toISOString() });
                 }

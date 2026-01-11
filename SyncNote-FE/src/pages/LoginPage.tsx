@@ -13,7 +13,7 @@ export const LoginPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await client.post('/auth/login', { email, password });
+            const response = await client.post('auth/login', { email, password });
             if (response.data.success !== false) { // Handle standardized response
                 // Response structure from backend walkthrough: { refresh: "...", access: "..." }
                 // But standardized response wraps it in "data".

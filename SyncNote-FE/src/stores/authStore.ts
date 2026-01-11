@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>()(
                 if (!refresh) throw new Error("No refresh token");
 
                 try {
-                    const response = await client.post('/auth/refresh', { refresh });
+                    const response = await client.post('auth/refresh', { refresh });
                     set({ accessToken: response.data.access });
                 } catch (error) {
                     get().logout();
