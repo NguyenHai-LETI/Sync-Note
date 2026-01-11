@@ -4,6 +4,17 @@ import client from '../api/client';
 import type { User } from '../types';
 import { db } from '../db/db';
 
+interface AuthState {
+    user: User | null;
+    accessToken: string | null;
+    refreshTokenString: string | null;
+    login: (access: string, refresh: string) => void;
+    logout: () => Promise<void>;
+    setAccessToken: (token: string) => void;
+    refreshToken: () => Promise<void>;
+    isAuthenticated: () => boolean;
+}
+
 export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
