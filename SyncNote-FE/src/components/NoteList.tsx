@@ -6,6 +6,7 @@ import { Plus, ChevronDown, ChevronRight, Trash2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { NoteItemsList } from './NoteItemsList';
 import { SyncService } from '../services/SyncService';
+import { ConfirmModal } from './ConfirmModal';
 import {
     DndContext,
     closestCenter,
@@ -92,6 +93,10 @@ export const NoteList = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [title, setTitle] = useState('');
     const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null);
+    const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean, noteId: string | null }>({
+        isOpen: false,
+        noteId: null
+    });
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -130,11 +135,19 @@ export const NoteList = () => {
         SyncService.pushChanges(); // Auto-push
     };
 
-    const handleDeleteNote = async (id: string, e: React.MouseEvent) => {
+    const handleDeleteNote = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        if (window.confirm('Delete this note?')) {
-            await db.notes.update(id, { is_deleted: true, is_dirty: true, updated_at: new Date().toISOString() });
-            SyncService.pushChanges(); // Auto-push
+        setDeleteModal({ isOpen: true, noteId: id });
+    };
+
+    const confirmDelete = async () => {
+        if (deleteModal.noteId) {
+            await db.notes.update(deleteModal.noteId, {
+                is_deleted: true,
+                is_dirty: true,
+                updated_at: new Date().toISOString()
+            });
+            SyncService.pushChanges();
         }
     };
 
@@ -248,6 +261,13 @@ export const NoteList = () => {
                     </div>
                 )}
             </div>
+            <ConfirmModal
+                isOpen={deleteModal.isOpen}
+                title="Delete Note"
+                message="Are you sure you want to delete this note and all its checklist items?"
+                onConfirm={confirmDelete}
+                onCancel={() => setDeleteModal({ isOpen: false, noteId: null })}
+            />
         </div>
     );
 };

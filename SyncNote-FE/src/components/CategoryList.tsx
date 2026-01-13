@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, BookText, Trash2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { SyncService } from '../services/SyncService';
+import { ConfirmModal } from './ConfirmModal';
 import {
     DndContext,
     closestCenter,
@@ -86,6 +87,10 @@ export const CategoryList: React.FC<CategoryListProps> = ({ onSelect }) => {
     const navigate = useNavigate();
     const [newCatName, setNewCatName] = useState('');
     const [isCreating, setIsCreating] = useState(false);
+    const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean, categoryId: string | null }>({
+        isOpen: false,
+        categoryId: null
+    });
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -117,10 +122,18 @@ export const CategoryList: React.FC<CategoryListProps> = ({ onSelect }) => {
         SyncService.pushChanges();
     };
 
-    const handleDelete = async (id: string, e: React.MouseEvent) => {
+    const handleDelete = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        if (window.confirm('Delete category?')) {
-            await db.categories.update(id, { is_deleted: true, is_dirty: true, updated_at: new Date().toISOString() });
+        setDeleteModal({ isOpen: true, categoryId: id });
+    };
+
+    const confirmDelete = async () => {
+        if (deleteModal.categoryId) {
+            await db.categories.update(deleteModal.categoryId, {
+                is_deleted: true,
+                is_dirty: true,
+                updated_at: new Date().toISOString()
+            });
             SyncService.pushChanges();
         }
     };
@@ -206,6 +219,14 @@ export const CategoryList: React.FC<CategoryListProps> = ({ onSelect }) => {
                     </div>
                 </SortableContext>
             </DndContext>
+
+            <ConfirmModal
+                isOpen={deleteModal.isOpen}
+                title="Delete Category"
+                message="Are you sure you want to delete this category? All notes within it will be hidden."
+                onConfirm={confirmDelete}
+                onCancel={() => setDeleteModal({ isOpen: false, categoryId: null })}
+            />
 
             <style>{`
                 .hover-bg { transition: background 0.2s; border-radius: 6px; }

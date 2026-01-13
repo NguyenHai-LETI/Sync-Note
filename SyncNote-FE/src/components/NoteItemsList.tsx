@@ -4,6 +4,7 @@ import { db } from '../db/db';
 import { v4 as uuidv4 } from 'uuid';
 import { Trash2, Plus, CheckSquare, Square, GripVertical, Bold, Italic, Palette, X, Check } from 'lucide-react';
 import { SyncService } from '../services/SyncService';
+import { ConfirmModal } from './ConfirmModal';
 import {
     DndContext,
     closestCenter,
@@ -194,7 +195,8 @@ const SortableItem = ({ item, toggleItem, deleteItem, saveItem }: SortableItemPr
                             fontSize: '0.95rem',
                             padding: '8px',
                             borderRadius: '4px',
-                            minHeight: '24px'
+                            minHeight: '24px',
+                            whiteSpace: 'pre-wrap'
                         }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
@@ -244,8 +246,8 @@ const SortableItem = ({ item, toggleItem, deleteItem, saveItem }: SortableItemPr
                     textDecoration: item.is_completed ? 'line-through' : 'none',
                     cursor: 'text',
                     minHeight: '24px',
-                    display: 'flex', alignItems: 'center',
-                    wordBreak: 'break-word'
+                    wordBreak: 'break-word',
+                    whiteSpace: 'pre-wrap'
                 }}
                 title="Click to edit"
                 // Render HTML directly
@@ -310,10 +312,23 @@ export const NoteItemsList: React.FC<NoteItemsListProps> = ({ noteId }) => {
         SyncService.pushChanges();
     };
 
-    const deleteItem = async (itemId: string, e: React.MouseEvent) => {
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+
+    const deleteItem = (itemId: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        await db.items.update(itemId, { is_deleted: true, is_dirty: true, updated_at: new Date().toISOString() });
-        SyncService.pushChanges();
+        setItemToDelete(itemId);
+    };
+
+    const confirmDeleteItem = async () => {
+        if (itemToDelete) {
+            await db.items.update(itemToDelete, {
+                is_deleted: true,
+                is_dirty: true,
+                updated_at: new Date().toISOString()
+            });
+            SyncService.pushChanges();
+            setItemToDelete(null);
+        }
     };
 
     // NEW: Save Item Handler
@@ -395,6 +410,13 @@ export const NoteItemsList: React.FC<NoteItemsListProps> = ({ noteId }) => {
                 />
                 <style>{`.item-input:focus { border-bottom-color: #e7e5e4 !important; }`}</style>
             </form>
+            <ConfirmModal
+                isOpen={!!itemToDelete}
+                title="Delete Item"
+                message="Are you sure you want to delete this checklist item?"
+                onConfirm={confirmDeleteItem}
+                onCancel={() => setItemToDelete(null)}
+            />
             <style>{`.delete-btn:hover { opacity: 1 !important; color: #d32f2f; }`}</style>
         </div>
     );

@@ -70,7 +70,12 @@ export const DashboardLayout = () => {
                 boxShadow: isMobile && isSidebarOpen ? '4px 0 15px rgba(0,0,0,0.1)' : 'none'
             }}>
                 <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 'var(--header-height)', boxSizing: 'border-box' }}>
-                    <h3 style={{ margin: 0, color: 'var(--accent-color)' }}>SyncNote</h3>
+                    <h3
+                        onClick={() => navigate('/')}
+                        style={{ margin: 0, color: 'var(--accent-color)', cursor: 'pointer' }}
+                    >
+                        SyncNote
+                    </h3>
                     {isMobile && (
                         <button onClick={() => setSidebarOpen(false)} style={{ border: 'none', background: 'transparent', padding: '4px' }}>
                             <Menu size={20} />
