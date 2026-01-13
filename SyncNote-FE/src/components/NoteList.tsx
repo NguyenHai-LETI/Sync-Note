@@ -163,6 +163,14 @@ export const NoteList = () => {
         }
     };
 
+    const category = useLiveQuery(
+        async () => {
+            if (!categoryId) return undefined;
+            return await db.categories.get(categoryId);
+        },
+        [categoryId]
+    );
+
     return (
         <div style={{ width: '100%', boxSizing: 'border-box' }}>
             <div style={{
@@ -173,7 +181,9 @@ export const NoteList = () => {
                 flexWrap: 'wrap',
                 gap: '1rem'
             }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--accent-color)', margin: 0 }}>Notes</h2>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--accent-color)', margin: 0 }}>
+                    {category?.name || 'Notes'}
+                </h2>
                 <button
                     onClick={() => setIsCreating(true)}
                     className="btn-primary"

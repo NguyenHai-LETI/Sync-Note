@@ -197,7 +197,7 @@ const SortableItem = ({ item, toggleItem, deleteItem, saveItem }: SortableItemPr
                             minHeight: '24px'
                         }}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
                                 handleSave();
                             }
